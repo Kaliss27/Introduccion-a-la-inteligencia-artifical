@@ -16,63 +16,188 @@ class Nodo(object):
         return  fn
 
     def aumentar_valor_camino(self,valor_camino):        #aumenta el valor del camino del nodo hacia el nodo inicial
-        self.gn +=valor_camino         
+        self.gn +=valor_camino    
 
+
+    def get_estado(self):
+        return self.estado
 
 
 ##Clases para grafo de ciudades
-class Vertice:
-    def __init__(self,nodo):
-        self.nodo = nodo 
-        self.conectadoA = {}
+class Vertex(object):
 
-    def agregarVecino(self,vecino,ponderacion=0):
-        self.conectadoA[vecino] = ponderacion
+    def __init__(self, label,hn):
+
+        self.label = Nodo(label,hn)
+        self.edges = []
+        self.visited = False
+
+
+class Edge(object):
+
+    def __init__(self, to, weight):
+
+        self.to = to
+        self.weight = weight
+
+
+
+class GraphAdjacencyList(object):
+
+    def __init__(self):
+
+        self.vertices = []
 
     def __str__(self):
-        return str(self.id) + ' conectadoA: ' + str([x.id for x in self.conectadoA])
 
-    def obtenerConexiones(self):
-        return self.conectadoA.keys()
+        hline = ("-" * 44) + "\n"
+        leftspace = ("|" + (" " * 16) + "|")
+        string = []
 
-    def obtenerId(self):
-        return self.id
+        string.append(hline)
+        string.append("|    Vertices    |    Edge To     | Weight |\n")
+        string.append(hline)
 
-    def obtenerPonderacion(self,vecino):
-        return self.conectadoA[vecino]
+        for vertex in self.vertices:
 
-class Grafo:
-    def __init__(self):
-        self.listaVertices = {}
-        self.numVertices = 0
+            string.append("|{0: <16}|".format(vertex.label.get_estado()))
 
-    def agregarVertice(self,clave):
-        self.numVertices = self.numVertices + 1
-        nuevoVertice = Vertice(clave)
-        self.listaVertices[clave] = nuevoVertice
-        return nuevoVertice
+            if len(vertex.edges) > 0:
 
-    def obtenerVertice(self,n):
-        if n in self.listaVertices:
-            return self.listaVertices[n]
+                for index, edge in enumerate(vertex.edges):
+
+                    if index > 0:
+                        string.append(leftspace)
+
+                    string.append("{0: <16}|".format(edge.to))
+
+                    if edge.weight is not None:
+                        string.append("{0: 8}|".format(edge.weight))
+                    else:
+                        string.append((" " * 8) + "|")
+
+                    string.append("\n")
+
+                string.append(hline)
+
+            else:
+
+                string.append((" " * 16) + "|" + (" " * 8) + "|\n")
+                string.append(hline)
+
+        return "".join(string)
+
+    def add_vertex(self, label,hn):
+
+        """
+        Adds a vertex with the given label to the list.
+        Raises ValueError if already exists.
+        """
+
+        if self.__find_vertex_index(label) == -1:
+            v = Vertex(label,hn)
+            self.vertices.append(v)
         else:
-            return None
+            raise ValueError("Vertex with this label already exists")
 
-    def __contains__(self,n):
-        return n in self.listaVertices
+    def add_edge(self, label1, label2, directed, weight):
 
-    def agregarArista(self,de,a,costo=0):
-        if de not in self.listaVertices:
-            nv = self.agregarVertice(de)
-        if a not in self.listaVertices:
-            nv = self.agregarVertice(a)
-        self.listaVertices[de].agregarVecino(self.listaVertices[a], costo)
+        """
+        Adds edge between given two vertices with given weight.
+        Recursively adds "reverse" edge if directed is False.
+        Raises ValueError if edge already exists, or if
+        either or both vertices do not exist.
+        """
 
-    def obtenerVertices(self):
-        return self.listaVertices.keys()
+        if self.__edge_exists(label1, label2) is True:
+            raise ValueError("Edge already exists")
+        else:
+            index1 = self.__find_vertex_index(label1)
+            index2 = self.__find_vertex_index(label2)
 
-    def __iter__(self):
-        return iter(self.listaVertices.values())        
+            if index1 == -1 or index2 == -1:
+                raise ValueError("One or both vertices not found")
+
+            else:
+                e1 = Edge(label2, weight)
+                self.vertices[index1].edges.append(e1)
+
+                if directed is False:
+                    self.add_edge(label2, label1, True, weight)
+
+
+    def __find_vertex_index(self, label):
+
+        for index, vertex in enumerate(self.vertices):
+            if vertex.label.get_estado() == label:
+                return index
+
+        return -1
+
+    def __edge_exists(self, label1, label2):
+
+        vertex_index = self.__find_vertex_index(label1)
+
+        for edge in self.vertices[vertex_index].edges:
+            if edge.to == label2:
+                return True
+
+        return False                
+
+
+def create_graph(hn):
+
+    g = GraphAdjacencyList()
+
+    g.add_vertex("Poza Rica",hn)
+    g.add_vertex("Veracruz",hn)
+    g.add_vertex("Boca del rio",hn)
+    g.add_vertex("Xalapa",hn)
+    g.add_vertex("Orizaba",hn)
+    g.add_vertex("Cotaxtla",hn)
+    g.add_vertex("Cordoba",hn)
+    g.add_vertex("Vega de alatorre",hn)
+    g.add_vertex("Coatzacoalcos",hn)
+    g.add_vertex("Cosamaloapan",hn)
+
+
+    g.add_edge("Poza Rica", "Xalapa", directed=False, weight=219)
+    g.add_edge("Poza Rica", "Vega de alatorre", directed=False, weight=132)
+
+    g.add_edge("Veracruz", "Boca del rio", directed=False, weight=9.6)
+    g.add_edge("Veracruz", "Xalapa", directed=False, weight=107)
+    g.add_edge("Veracruz", "Cotaxtla", directed=False, weight=70.4)
+    g.add_edge("Veracruz", "Vega de alatorre", directed=False, weight=130)
+
+    #g.add_edge("Boca del rio", "Veracruz", directed=False, weight=9.6)
+    g.add_edge("Boca del rio", "Cotaxtla", directed=False, weight=57.3)
+    
+    #g.add_edge("Xalapa", "Poza Rica", directed=False, weight=219)
+    g.add_edge("Xalapa", "Cordoba", directed=False, weight=136)
+    #g.add_edge("Xalapa", "Veracruz", directed=False, weight=107)
+
+    g.add_edge("Orizaba", "Cordoba", directed=False, weight=24.8)
+
+    g.add_edge("Cotaxtla", "Cordoba", directed=False, weight=67.4)
+    #g.add_edge("Cotaxtla", "Veracruz", directed=False, weight=70.4)
+    #g.add_edge("Cotaxtla", "Boca del rio", directed=False, weight=57.3)
+    g.add_edge("Cotaxtla", "Cosamaloapan", directed=False, weight=98.8)
+
+    #g.add_edge("Cordoba", "Orizaba", directed=False, weight=24.8)
+    #g.add_edge("Cordoba", "Xalapa", directed=False, weight=136)
+    #g.add_edge("Cordoba", "Cotaxtla", directed=False, weight=67.4)
+
+    #g.add_edge("Vega de alatorre", "Poza Rica", directed=False, weight=132)
+    #g.add_edge("Vega de alatorre", "Veracruz", directed=False, weight=130)
+
+    g.add_edge("Coatzacoalcos", "Cosamaloapan", directed=False, weight=176)
+
+    #g.add_edge("Cosamaloapan", "Coatzacoalcos", directed=False, weight=176)
+    #g.add_edge("Cosamaloapan", "Cotaxtla", directed=False, weight=98.8)
+
+
+
+    return g
 
 
 
@@ -150,6 +275,11 @@ def A_estrella():
 #Go back to Step-02.
 
 def main():
+    g = create_graph(0)
+
+    print(g)
+    
+
     nodo = Nodo('',0)
     nodo=fn_menor();
     print("",nodo.estado)
