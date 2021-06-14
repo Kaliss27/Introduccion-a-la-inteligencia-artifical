@@ -168,16 +168,17 @@ def create_graph():
 
     g = GraphAdjacencyList()
 
-    g.add_vertex("Poza Rica",hdlr_fin.pop(0))
-    g.add_vertex("Veracruz",hdlr_fin.pop(1))
-    g.add_vertex("Boca del rio",hdlr_fin.pop(2))
-    g.add_vertex("Xalapa",hdlr_fin.pop(3))
-    g.add_vertex("Orizaba",hdlr_fin.pop(4))
-    g.add_vertex("Cotaxtla",hdlr_fin.pop(5))
-    g.add_vertex("Cordoba",hdlr_fin.pop(6))
-    g.add_vertex("Vega de alatorre",hdlr_fin.pop(7))
-    g.add_vertex("Coatzacoalcos",hdlr_fin.pop(8))
-    g.add_vertex("Cosamaloapan",hdlr_fin.pop(9))
+    print(hdlr_fin[0])
+    g.add_vertex("Poza Rica",hdlr_fin[0])
+    g.add_vertex("Veracruz",hdlr_fin[1])
+    g.add_vertex("Boca del rio",hdlr_fin[2])
+    g.add_vertex("Xalapa",hdlr_fin[3])
+    g.add_vertex("Orizaba",hdlr_fin[4])
+    g.add_vertex("Cotaxtla",hdlr_fin[5])
+    g.add_vertex("Cordoba",hdlr_fin[6])
+    g.add_vertex("Vega de alatorre",hdlr_fin[7])
+    g.add_vertex("Coatzacoalcos",hdlr_fin[8])
+    g.add_vertex("Cosamaloapan",hdlr_fin[9])
 
 
     g.add_edge("Poza Rica", "Xalapa", directed=False, weight=219)
@@ -335,4 +336,4 @@ def main():
     print("",nodo.estado)
 
 
-main()      
+main()        
