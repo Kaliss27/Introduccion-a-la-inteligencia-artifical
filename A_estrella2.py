@@ -1,5 +1,24 @@
 #A* ciudades- Peralta Luna Karen Lisseth
 
+import copy
+
+
+hdlr=[  [0    ,260  ,285  ,219  ,378  ,321  ,369  ,131  ,369  ,406 ],   #Matriz que determina la heuristica de linea recta Hdlr dada una ciudad meta
+        [262  ,0    ,10.8 ,107  ,134  ,70.3 ,110  ,130  ,310  ,147 ],   #Fila/Columna orden:
+        [288  ,9.6  ,0    ,133  ,138  ,57.5 ,113  ,156  ,314  ,145 ],   #0->Poza Rica               8->Coatzacoalcos
+        [219  ,107  ,132  ,0    ,144  ,168  ,136  ,157  ,416  ,253 ],   #1->Veracruz                9->Cosamaloapan
+        [385  ,132  ,134  ,144  ,0    ,88.3 ,24.8 ,253  ,328  ,165 ],   #2->Boca del rio
+        [324  ,70.4 ,57.3 ,169  ,88.4 ,0    ,66.8 ,176  ,262  ,99.2],   #3->Xalapa
+        [365  ,111  ,113  ,136  ,24.6 ,67.4 ,0    ,233  ,307  ,144 ],   #4->Orizaba
+        [132  ,129  ,153  ,157  ,260  ,176  ,247  ,0    ,438  ,275 ],   #5->Cotaxtla
+        [564  ,310  ,309  ,409  ,328  ,264  ,311  ,432  ,0    ,176 ],   #6->Cordoba
+        [399  ,146  ,144  ,244  ,164  ,98.8 ,142  ,263  ,174  ,0   ]]   #7->Vega de alatorre
+
+hdlr_fin=list()
+
+
+
+
 #Clase Nodo
 class Nodo(object):
     """docstring for Viajero"""
@@ -145,20 +164,20 @@ class GraphAdjacencyList(object):
         return False                
 
 
-def create_graph(hn):
+def create_graph():
 
     g = GraphAdjacencyList()
 
-    g.add_vertex("Poza Rica",hn)
-    g.add_vertex("Veracruz",hn)
-    g.add_vertex("Boca del rio",hn)
-    g.add_vertex("Xalapa",hn)
-    g.add_vertex("Orizaba",hn)
-    g.add_vertex("Cotaxtla",hn)
-    g.add_vertex("Cordoba",hn)
-    g.add_vertex("Vega de alatorre",hn)
-    g.add_vertex("Coatzacoalcos",hn)
-    g.add_vertex("Cosamaloapan",hn)
+    g.add_vertex("Poza Rica",hdlr_fin.pop(0))
+    g.add_vertex("Veracruz",hdlr_fin.pop(1))
+    g.add_vertex("Boca del rio",hdlr_fin.pop(2))
+    g.add_vertex("Xalapa",hdlr_fin.pop(3))
+    g.add_vertex("Orizaba",hdlr_fin.pop(4))
+    g.add_vertex("Cotaxtla",hdlr_fin.pop(5))
+    g.add_vertex("Cordoba",hdlr_fin.pop(6))
+    g.add_vertex("Vega de alatorre",hdlr_fin.pop(7))
+    g.add_vertex("Coatzacoalcos",hdlr_fin.pop(8))
+    g.add_vertex("Cosamaloapan",hdlr_fin.pop(9))
 
 
     g.add_edge("Poza Rica", "Xalapa", directed=False, weight=219)
@@ -169,33 +188,18 @@ def create_graph(hn):
     g.add_edge("Veracruz", "Cotaxtla", directed=False, weight=70.4)
     g.add_edge("Veracruz", "Vega de alatorre", directed=False, weight=130)
 
-    #g.add_edge("Boca del rio", "Veracruz", directed=False, weight=9.6)
+
     g.add_edge("Boca del rio", "Cotaxtla", directed=False, weight=57.3)
     
-    #g.add_edge("Xalapa", "Poza Rica", directed=False, weight=219)
     g.add_edge("Xalapa", "Cordoba", directed=False, weight=136)
-    #g.add_edge("Xalapa", "Veracruz", directed=False, weight=107)
 
     g.add_edge("Orizaba", "Cordoba", directed=False, weight=24.8)
 
     g.add_edge("Cotaxtla", "Cordoba", directed=False, weight=67.4)
-    #g.add_edge("Cotaxtla", "Veracruz", directed=False, weight=70.4)
-    #g.add_edge("Cotaxtla", "Boca del rio", directed=False, weight=57.3)
+
     g.add_edge("Cotaxtla", "Cosamaloapan", directed=False, weight=98.8)
 
-    #g.add_edge("Cordoba", "Orizaba", directed=False, weight=24.8)
-    #g.add_edge("Cordoba", "Xalapa", directed=False, weight=136)
-    #g.add_edge("Cordoba", "Cotaxtla", directed=False, weight=67.4)
-
-    #g.add_edge("Vega de alatorre", "Poza Rica", directed=False, weight=132)
-    #g.add_edge("Vega de alatorre", "Veracruz", directed=False, weight=130)
-
     g.add_edge("Coatzacoalcos", "Cosamaloapan", directed=False, weight=176)
-
-    #g.add_edge("Cosamaloapan", "Coatzacoalcos", directed=False, weight=176)
-    #g.add_edge("Cosamaloapan", "Cotaxtla", directed=False, weight=98.8)
-
-
 
     return g
 
@@ -270,12 +274,58 @@ def A_estrella():
  
 #Step-07:
 
- 
-
 #Go back to Step-02.
 
+
+
+
+def __heuristica_por_ciudad_destino(cod_ciudad):        #Busca en la matriz la lista de heuristicas a usar dada una ciudad de destino
+    #hdlr_finn=list()
+    for i in range(len(hdlr[cod_ciudad])):
+        print(hdlr[cod_ciudad][i])
+        hdlr_fin.append(hdlr[cod_ciudad][i])
+
+    for x in hdlr_fin:
+        print("del copy :",x)    
+
+def __codigo_ciudad(ciudad):                    #Devuelve el valor numerico de la ciudada dado el nombre
+    if ciudad== "Poza Rica": 
+        return 0
+    if ciudad== "Veracruz":
+        return 1
+    if ciudad== "Boca del rio":
+        return 2    
+    if ciudad== "Xalapa":
+        return 3
+    if ciudad== "Orizaba":
+        return 4        
+    if ciudad== "Cotaxtla":
+        return 5
+    if ciudad== "Cordoba":
+        return 6
+    if ciudad== "Vega de alatorre":
+        return 7
+    if ciudad== "Coatzacoalcos":
+        return 8
+    if ciudad== "Cosamaloapan":
+        return 9
+
+
 def main():
-    g = create_graph(0)
+
+    ciudad_ori=str(input("Indique la ciudad de origen:"))
+    ciudad_dest=str(input("Indique la ciudad destino:"))
+
+    codigo_ciudad=__codigo_ciudad(ciudad_dest)
+    print(codigo_ciudad)
+
+    __heuristica_por_ciudad_destino(codigo_ciudad)
+
+
+    #print(ciudad_ori)
+    #print(ciudad_dest)
+
+    g = create_graph()
 
     print(g)
     
@@ -285,4 +335,4 @@ def main():
     print("",nodo.estado)
 
 
-main()    
+main()      
