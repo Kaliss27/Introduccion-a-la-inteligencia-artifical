@@ -1,0 +1,233 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Buttons_Texts.gd" type="Script" id=1]
+
+[sub_resource type="Theme" id=1]
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 227.22
+margin_top = 43.1587
+margin_right = -382.78
+margin_bottom = 3.15875
+theme = SubResource( 1 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_left = 84.1082
+margin_top = -30.3808
+margin_right = 496.108
+margin_bottom = 497.619
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Titulo" type="Label" parent="VBoxContainer"]
+margin_right = 411.0
+margin_bottom = 14.0
+text = "PROBLEMA DEL VIAJANTE"
+align = 1
+
+[node name="Label2" type="Label" parent="VBoxContainer"]
+margin_top = 18.0
+margin_right = 411.0
+margin_bottom = 32.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 36.0
+margin_right = 411.0
+margin_bottom = 50.0
+
+[node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer"]
+margin_right = 111.0
+margin_bottom = 14.0
+text = "Ciudad de origen:"
+
+[node name="Ciudad" type="Label" parent="VBoxContainer/HBoxContainer"]
+margin_left = 115.0
+margin_right = 300.0
+margin_bottom = 14.0
+text = "-------------------------------------"
+align = 2
+
+[node name="Label5" type="Label" parent="VBoxContainer"]
+margin_top = 54.0
+margin_right = 411.0
+margin_bottom = 68.0
+
+[node name="MenuButton" type="MenuButton" parent="VBoxContainer"]
+margin_top = 72.0
+margin_right = 411.0
+margin_bottom = 92.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/MenuButton"]
+margin_left = 155.0
+margin_top = -5.0
+margin_right = 324.0
+margin_bottom = 38.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MenuButton/ScrollContainer"]
+margin_right = 88.0
+margin_bottom = 212.0
+
+[node name="Veracruz" type="Button" parent="VBoxContainer/MenuButton/ScrollContainer/VBoxContainer"]
+margin_right = 88.0
+margin_bottom = 20.0
+text = "Veracruz"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Boca-del-rio" type="Button" parent="VBoxContainer/MenuButton/ScrollContainer/VBoxContainer"]
+margin_top = 24.0
+margin_right = 88.0
+margin_bottom = 44.0
+text = "Boca del rio"
+
+[node name="Button3" type="Button" parent="VBoxContainer/MenuButton/ScrollContainer/VBoxContainer"]
+margin_top = 48.0
+margin_right = 88.0
+margin_bottom = 68.0
+text = "Medellin"
+
+[node name="Button4" type="Button" parent="VBoxContainer/MenuButton/ScrollContainer/VBoxContainer"]
+margin_top = 72.0
+margin_right = 88.0
+margin_bottom = 92.0
+text = "Poza rica"
+
+[node name="Button5" type="Button" parent="VBoxContainer/MenuButton/ScrollContainer/VBoxContainer"]
+margin_top = 96.0
+margin_right = 88.0
+margin_bottom = 116.0
+text = "Xalapa"
+
+[node name="Button6" type="Button" parent="VBoxContainer/MenuButton/ScrollContainer/VBoxContainer"]
+margin_top = 120.0
+margin_right = 88.0
+margin_bottom = 140.0
+text = "Cordoba"
+
+[node name="Button7" type="Button" parent="VBoxContainer/MenuButton/ScrollContainer/VBoxContainer"]
+margin_top = 144.0
+margin_right = 88.0
+margin_bottom = 164.0
+text = "Orizaba"
+
+[node name="Button8" type="Button" parent="VBoxContainer/MenuButton/ScrollContainer/VBoxContainer"]
+margin_top = 168.0
+margin_right = 88.0
+margin_bottom = 188.0
+text = "Cardel"
+
+[node name="Button9" type="Button" parent="VBoxContainer/MenuButton/ScrollContainer/VBoxContainer"]
+margin_top = 192.0
+margin_right = 88.0
+margin_bottom = 212.0
+text = "Cotaxtla"
+
+[node name="Label4" type="Label" parent="VBoxContainer"]
+margin_top = 96.0
+margin_right = 411.0
+margin_bottom = 110.0
+
+[node name="Label6" type="Label" parent="VBoxContainer"]
+margin_top = 114.0
+margin_right = 411.0
+margin_bottom = 128.0
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 132.0
+margin_right = 411.0
+margin_bottom = 146.0
+
+[node name="Label3" type="Label" parent="VBoxContainer/HBoxContainer2"]
+margin_right = 165.0
+margin_bottom = 14.0
+text = "Algoritmo a implementar:"
+
+[node name="Algortimo" type="Label" parent="VBoxContainer/HBoxContainer2"]
+margin_left = 169.0
+margin_right = 314.0
+margin_bottom = 14.0
+text = "-----------------------------"
+
+[node name="MenuButton2" type="MenuButton" parent="VBoxContainer"]
+margin_top = 150.0
+margin_right = 411.0
+margin_bottom = 170.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/MenuButton2"]
+margin_left = 151.0
+margin_top = 1.0
+margin_right = 325.0
+margin_bottom = 49.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MenuButton2/ScrollContainer"]
+margin_right = 74.0
+margin_bottom = 92.0
+
+[node name="Button" type="Button" parent="VBoxContainer/MenuButton2/ScrollContainer/VBoxContainer"]
+margin_right = 74.0
+margin_bottom = 20.0
+text = "A*"
+
+[node name="Button2" type="Button" parent="VBoxContainer/MenuButton2/ScrollContainer/VBoxContainer"]
+margin_top = 24.0
+margin_right = 74.0
+margin_bottom = 44.0
+text = "Greedy"
+
+[node name="Button3" type="Button" parent="VBoxContainer/MenuButton2/ScrollContainer/VBoxContainer"]
+margin_top = 48.0
+margin_right = 74.0
+margin_bottom = 68.0
+text = "RRT"
+
+[node name="Button4" type="Button" parent="VBoxContainer/MenuButton2/ScrollContainer/VBoxContainer"]
+margin_top = 72.0
+margin_right = 74.0
+margin_bottom = 92.0
+text = "one more"
+
+[node name="Label7" type="Label" parent="VBoxContainer"]
+margin_top = 174.0
+margin_right = 411.0
+margin_bottom = 188.0
+
+[node name="Label8" type="Label" parent="VBoxContainer"]
+margin_top = 192.0
+margin_right = 411.0
+margin_bottom = 206.0
+
+[node name="Label9" type="Label" parent="VBoxContainer"]
+margin_top = 210.0
+margin_right = 411.0
+margin_bottom = 224.0
+
+[node name="Iniciar" type="Button" parent="VBoxContainer"]
+margin_top = 228.0
+margin_right = 411.0
+margin_bottom = 248.0
+text = "Iniciar"
+
+[connection signal="pressed" from="VBoxContainer/MenuButton/ScrollContainer/VBoxContainer/Veracruz" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="VBoxContainer/MenuButton/ScrollContainer/VBoxContainer/Boca-del-rio" to="." method="_on_Button2_pressed"]
+[connection signal="pressed" from="VBoxContainer/MenuButton/ScrollContainer/VBoxContainer/Button3" to="." method="_on_Button3_pressed"]
+[connection signal="pressed" from="VBoxContainer/MenuButton/ScrollContainer/VBoxContainer/Button4" to="." method="_on_Button4_pressed"]
+[connection signal="pressed" from="VBoxContainer/MenuButton/ScrollContainer/VBoxContainer/Button5" to="." method="_on_Button5_pressed"]
+[connection signal="pressed" from="VBoxContainer/MenuButton/ScrollContainer/VBoxContainer/Button6" to="." method="_on_Button6_pressed"]
+[connection signal="pressed" from="VBoxContainer/MenuButton/ScrollContainer/VBoxContainer/Button7" to="." method="_on_Button7_pressed"]
+[connection signal="pressed" from="VBoxContainer/MenuButton/ScrollContainer/VBoxContainer/Button8" to="." method="_on_Button8_pressed"]
+[connection signal="pressed" from="VBoxContainer/MenuButton/ScrollContainer/VBoxContainer/Button9" to="." method="_on_Button9_pressed"]
+[connection signal="pressed" from="VBoxContainer/Iniciar" to="." method="_on_Iniciar_pressed"]
