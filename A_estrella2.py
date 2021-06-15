@@ -171,7 +171,16 @@ class GraphAdjacencyList(object):
         #Recuperar una copia del nodo en un objeto nuevo
         nodo_aux= copy.deepcopy(self.vertices[vertex_index].label)
         return nodo_aux
- 
+    
+    def get_vecinos(self,label1):                                                   #AGrega a la OpenList los vecinos del nodo actual para expandir
+        vertex_index = self.__find_vertex_index(label1)
+        i=0
+        if len(self.vertices[vertex_index].edges)>0:
+            for edge in self.vertices[vertex_index].edges:
+                aux=self.__find_vertex_index(edge.to)
+                print(aux)
+            #OPEN_list.append(copy.deepcopy(self.vertices[vertex_index].edges))
+            #i+=1
 
 #--------------------------------------
 
@@ -269,7 +278,10 @@ class Agente(object):
 
     #Step-02:
 
-    def A_estrella(self):
+    def A_estrella(self,grafo):
+
+        camino=[]
+
         if (self.lista_vacia(OPEN_list)):      #If the list is empty, return failure and exit.
             print("Error")
             return  False  
@@ -286,12 +298,10 @@ class Agente(object):
 
         #print(OPEN_list)  
         print("Toca expandir")
-
-    
     #Step-04:
-
-#Expand node n.
-
+    #Expand node n.
+        grafo.get_vecinos(aux_estado)
+        print(OPEN_list)
  
 #Step-05:
 
@@ -377,7 +387,7 @@ def main():
     
     add_to_OPENLIST(cd_hn)      #Agregamos el nodo a la OPENLIST
     #-------- A*
-    Agentee.A_estrella()
+    Agentee.A_estrella(gr)
 
 
-main()         
+main()    
