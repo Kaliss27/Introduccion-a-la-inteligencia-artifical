@@ -168,6 +168,9 @@ class GraphAdjacencyList(object):
         vertex_index = self.__find_vertex_index(label1)
         print(self.vertices[vertex_index].label.get_estado())
         print(self.vertices[vertex_index].label.get_hn())
+        #Recuperar una copia del nodo en un objeto nuevo
+        nodo_aux= copy.deepcopy(self.vertices[vertex_index].label)
+        return nodo_aux
  
 
 #--------------------------------------
@@ -227,10 +230,7 @@ OPEN_list = list()
 CLOSED_list=list()
  
 
-def __lista_vacia(list):            #Verifica si una lista esta vacia
-    if len(list)==0:
-        return True
-    return False    
+  
 
 def fn_menor():         #Determina el nodo con menor valor para fn
     menor = 0           #determina fn menor igual a 0 en un inicio
@@ -250,24 +250,45 @@ def fn_menor():         #Determina el nodo con menor valor para fn
     return nodo_aux            
 
             
+class Agente(object):
+    """docstring for Agente"""
+    def __init__(self,ciudad_org,ciudad_dest):
+        super(Agente, self).__init__()
+        self.ciudad_org=ciudad_org
+        self.ciudad_dest=ciudad_dest
 
+    def es_estado_meta(self,ciudad_act):
+        if ciudad_act == self.ciudad_dest:
+            return True
+        return False
+    
+    def lista_vacia(self,list):            #Verifica si una lista esta vacia
+        if len(list)==0:
+            return True
+        return False  
 
-#Step-02:
+    #Step-02:
 
-def A_estrella():
-    if (__lista_vacia(OPEN_list)):      #If the list is empty, return failure and exit.
-        print("Error")
-        return  False
+    def A_estrella(self):
+        if (self.lista_vacia(OPEN_list)):      #If the list is empty, return failure and exit.
+            print("Error")
+            return  False  
+    #Step-03:
+    #   Remove node n with the smallest value of f(n) from OPEN and move it to list CLOSED.
+    #  If node n is a goal state, return success and exit.
+        menor=fn_menor()
+        aux_estado=menor.get_estado()
+        CLOSED_list.append(menor)
+        OPEN_list.remove(menor)
+        if self.es_estado_meta(aux_estado):
+            print("Llego al estado meta")
+            return True
 
+        #print(OPEN_list)  
+        print("Toca expandir")
 
-#Step-03:
- #   Remove node n with the smallest value of f(n) from OPEN and move it to list CLOSED.
-  #  If node n is a goal state, return success and exit.
-
- 
-#Step-04:
-
- 
+    
+    #Step-04:
 
 #Expand node n.
 
@@ -294,7 +315,10 @@ def A_estrella():
 
 #Go back to Step-02.
 
-
+def add_to_OPENLIST(ciudad):
+    OPEN_list.append(ciudad)
+    print(OPEN_list[0].get_estado())
+    print(OPEN_list[0].get_hn())
 
 
 def __heuristica_por_ciudad_destino(cod_ciudad):        #Busca en la matriz la lista de heuristicas a usar dada una ciudad de destino
@@ -334,6 +358,8 @@ def main():
     ciudad_ori=str(input("Indique la ciudad de origen:"))
     ciudad_dest=str(input("Indique la ciudad destino:"))
 
+    Agentee=Agente(ciudad_ori,ciudad_dest)
+
     codigo_ciudad=__codigo_ciudad(ciudad_dest)      #determinamos el codigo de la coidad de destino
     print(codigo_ciudad)                    
 
@@ -346,10 +372,12 @@ def main():
     gr = create_graph()
 
     print(gr)
+
+    cd_hn=gr.get_vertice(ciudad_ori)        #Buscamos el nodo de la ciudad de origen ,para comenzar
     
-    #
-    gr.get_vertice(ciudad_ori)
-    
+    add_to_OPENLIST(cd_hn)      #Agregamos el nodo a la OPENLIST
+    #-------- A*
+    Agentee.A_estrella()
 
 
-main()          
+main()         
