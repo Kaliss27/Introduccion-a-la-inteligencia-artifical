@@ -40,6 +40,8 @@ class Nodo(object):
 
     def get_estado(self):
         return self.estado
+    def get_hn(self):
+        return self.hn    
 
 
 ##Clases para grafo de ciudades
@@ -162,12 +164,17 @@ class GraphAdjacencyList(object):
                 return True
 
         return False                
+    def get_vertice(self,label1):
+        vertex_index = self.__find_vertex_index(label1)
+        print(self.vertices[vertex_index].label.get_estado())
+        print(self.vertices[vertex_index].label.get_hn())
+ 
 
+#--------------------------------------
 
 def create_graph():
 
     g = GraphAdjacencyList()
-
     print(hdlr_fin[0])
     g.add_vertex("Poza Rica",hdlr_fin[0])
     g.add_vertex("Veracruz",hdlr_fin[1])
@@ -202,6 +209,8 @@ def create_graph():
 
     g.add_edge("Coatzacoalcos", "Cosamaloapan", directed=False, weight=176)
 
+
+
     return g
 
 
@@ -214,8 +223,14 @@ def create_graph():
 #Step-01:
  #   Define a list OPEN.
 #  Initially, OPEN consists solely of a single node, the start node S.
-OPEN_list = [Nodo('Veracruz',46)]
+OPEN_list = list()
+CLOSED_list=list()
  
+
+def __lista_vacia(list):            #Verifica si una lista esta vacia
+    if len(list)==0:
+        return True
+    return False    
 
 def fn_menor():         #Determina el nodo con menor valor para fn
     menor = 0           #determina fn menor igual a 0 en un inicio
@@ -240,9 +255,11 @@ def fn_menor():         #Determina el nodo con menor valor para fn
 #Step-02:
 
 def A_estrella():
-    if (OPEN_list==Null):      #If the list is empty, return failure and exit.
+    if (__lista_vacia(OPEN_list)):      #If the list is empty, return failure and exit.
         print("Error")
-        return
+        return  False
+
+
 #Step-03:
  #   Remove node n with the smallest value of f(n) from OPEN and move it to list CLOSED.
   #  If node n is a goal state, return success and exit.
@@ -313,27 +330,26 @@ def __codigo_ciudad(ciudad):                    #Devuelve el valor numerico de l
 
 
 def main():
-
+    #Indicamos la ciudad de origen y de destino
     ciudad_ori=str(input("Indique la ciudad de origen:"))
     ciudad_dest=str(input("Indique la ciudad destino:"))
 
-    codigo_ciudad=__codigo_ciudad(ciudad_dest)
-    print(codigo_ciudad)
+    codigo_ciudad=__codigo_ciudad(ciudad_dest)      #determinamos el codigo de la coidad de destino
+    print(codigo_ciudad)                    
 
-    __heuristica_por_ciudad_destino(codigo_ciudad)
-
-
+    __heuristica_por_ciudad_destino(codigo_ciudad)  #Buscamos la lista de los valores de las heuristicas de cada ciudad
+                                                     # con respecto a la ciudad de destino           
     #print(ciudad_ori)
     #print(ciudad_dest)
 
-    g = create_graph()
+    #Creamos el grafo representativo de las ciudades
+    gr = create_graph()
 
-    print(g)
+    print(gr)
+    
+    #
+    gr.get_vertice(ciudad_ori)
     
 
-    nodo = Nodo('',0)
-    nodo=fn_menor();
-    print("",nodo.estado)
 
-
-main()        
+main()          
