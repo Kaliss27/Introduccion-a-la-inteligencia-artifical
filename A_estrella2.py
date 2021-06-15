@@ -42,8 +42,13 @@ class Nodo(object):
         return self.estado
 
     def get_hn(self):
-        return self.hn    
+        return self.hn
 
+    def set_gn(self,gna):
+        self.gn+=gna
+
+    def get_gn(self):
+        return self.gn    
 
 ##Clases para grafo de ciudades
 class Vertex(object):
@@ -164,6 +169,13 @@ class GraphAdjacencyList(object):
             if edge.to == label2:
                 return True
 
+    def edge_value(self,label1,label2):
+        vertex_index = self.__find_vertex_index(label1)
+        print("ciudades:",label1,label2)
+        for edge in self.vertices[vertex_index].edges:
+            if edge.to == label2:                                       #regreso el peso del arista
+                return edge.weight
+
         return False                
     def get_vertice(self,label1):
         vertex_index = self.__find_vertex_index(label1)
@@ -179,10 +191,10 @@ class GraphAdjacencyList(object):
         if len(self.vertices[vertex_index].edges)>0:
             for edge in self.vertices[vertex_index].edges:
                 aux=self.__find_vertex_index(edge.to)
-                print(aux)
+                #print(aux)
                 ciudadd=ciudad(aux)
                 vertex_indx2=self.__find_vertex_index(ciudadd)
-                print("Vertice:",self.vertices[vertex_indx2].label.get_estado())
+                #print("Vertice:",self.vertices[vertex_indx2].label.get_estado())
                 OPEN_list.append(copy.deepcopy(self.vertices[vertex_indx2].label))
             #i+=1
         #for item in OPEN_list:
@@ -251,16 +263,41 @@ def fn_menor():         #Determina el nodo con menor valor para fn
     menor = 0           #determina fn menor igual a 0 en un inicio
     nodo_aux = Nodo('',0)
     fn_actual = 0       #para determinar el calculo actual
-    for x in OPEN_list:
-        print(x.estado)                           #Toma el valor de una lista
-        x.calcular_fn()     #Determina a fn actual con el calculo de fn del nodo aux actual
-        if menor == 0:
+
+    menor=OPEN_list[0].calcular_fn()
+    print("menor 1:",menor)
+
+    if menor==0:
+        nodo_aux=OPEN_list[0]
+        print(nodo_aux.get_estado())
+        return nodo_aux
+
+    if len(OPEN_list) == 1:
+        nodo_aux=OPEN_list[0]
+        return nodo_aux
+
+    for i in range(len(OPEN_list)):
+
+        print(OPEN_list[i].get_estado())
+
+        fn_actual=OPEN_list[i].calcular_fn()
+        
+
+        if menor > fn_actual:
             menor=fn_actual
-            nodo_aux=x
-        else:
-            if fn_actual > menor:
-                menor=fn_actual
-                nodo_aux=x
+            nodo_aux=OPEN_list[i]
+            print("menor 2:",nodo_aux.get_estado())
+   
+   # for x in OPEN_list:
+    #    print(x.estado)                           #Toma el valor de una lista
+     #   x.calcular_fn()     #Determina a fn actual con el calculo de fn del nodo aux actual
+      #  if menor == 0:
+    #        menor=fn_actual
+     #       nodo_aux=x
+     #   else:
+      #      if fn_actual < menor:
+       #         menor=fn_actual
+        #        nodo_aux=x
 
     return nodo_aux            
 
@@ -320,6 +357,10 @@ class Agente(object):
     #For each successor node,
 #    Apply the evaluation function f to the node.
 #    If the node has not been in either list, add it to OPEN.
+        for i in range(len(OPEN_list)):
+            #print(OPEN_list[i].get_estado())
+            self.actualizar_gn(grafo,aux_estado,OPEN_list[i].get_estado(),i)
+
         menor=fn_menor()
         aux_estado=menor.get_estado()
         print("menor:",aux_estado)
@@ -327,6 +368,14 @@ class Agente(object):
 #Step-07:
 
 #Go back to Step-02.
+#Por cada elemento de la lista
+    def actualizar_gn(self,gr,ciudad1,ciudad2,i): 
+        cant=gr.edge_value(ciudad1,ciudad2)
+        print(cant)
+        OPEN_list[i].set_gn(cant)
+        print("ciudad:",OPEN_list[i].get_estado()," gn:",OPEN_list[i].get_gn())
+
+
 
 def add_to_OPENLIST(ciudad):
     OPEN_list.append(ciudad)
