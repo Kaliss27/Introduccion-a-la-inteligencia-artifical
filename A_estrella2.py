@@ -261,12 +261,12 @@ CLOSED_list=list()
 
 def fn_menor():         #Determina el nodo con menor valor para fn
     menor = 0           #determina fn menor igual a 0 en un inicio
-    nodo_aux = Nodo('',0)
     fn_actual = 0       #para determinar el calculo actual
 
     menor=OPEN_list[0].calcular_fn()
     print("menor 1:",menor)
-
+    nodo_aux=OPEN_list[0]
+    
     if menor==0:
         nodo_aux=OPEN_list[0]
         print(nodo_aux.get_estado())
@@ -362,6 +362,7 @@ class Agente(object):
             self.actualizar_gn(grafo,aux_estado,OPEN_list[i].get_estado(),i)
 
         menor=fn_menor()
+        print("algo?",menor.get_hn())
         aux_estado=menor.get_estado()
         print("menor:",aux_estado)
  
