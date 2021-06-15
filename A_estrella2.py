@@ -266,7 +266,7 @@ def fn_menor():         #Determina el nodo con menor valor para fn
     menor=OPEN_list[0].calcular_fn()
     print("menor 1:",menor)
     nodo_aux=OPEN_list[0]
-    
+
     if menor==0:
         nodo_aux=OPEN_list[0]
         print(nodo_aux.get_estado())
@@ -282,22 +282,10 @@ def fn_menor():         #Determina el nodo con menor valor para fn
 
         fn_actual=OPEN_list[i].calcular_fn()
         
-
         if menor > fn_actual:
             menor=fn_actual
             nodo_aux=OPEN_list[i]
             print("menor 2:",nodo_aux.get_estado())
-   
-   # for x in OPEN_list:
-    #    print(x.estado)                           #Toma el valor de una lista
-     #   x.calcular_fn()     #Determina a fn actual con el calculo de fn del nodo aux actual
-      #  if menor == 0:
-    #        menor=fn_actual
-     #       nodo_aux=x
-     #   else:
-      #      if fn_actual < menor:
-       #         menor=fn_actual
-        #        nodo_aux=x
 
     return nodo_aux            
 
