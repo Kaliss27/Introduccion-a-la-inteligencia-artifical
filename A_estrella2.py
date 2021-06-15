@@ -40,6 +40,7 @@ class Nodo(object):
 
     def get_estado(self):
         return self.estado
+
     def get_hn(self):
         return self.hn    
 
@@ -179,8 +180,13 @@ class GraphAdjacencyList(object):
             for edge in self.vertices[vertex_index].edges:
                 aux=self.__find_vertex_index(edge.to)
                 print(aux)
-            #OPEN_list.append(copy.deepcopy(self.vertices[vertex_index].edges))
+                ciudadd=ciudad(aux)
+                vertex_indx2=self.__find_vertex_index(ciudadd)
+                print("Vertice:",self.vertices[vertex_indx2].label.get_estado())
+                OPEN_list.append(copy.deepcopy(self.vertices[vertex_indx2].label))
             #i+=1
+        #for item in OPEN_list:
+        #    print(item.get_estado())    
 
 #--------------------------------------
 
@@ -252,7 +258,7 @@ def fn_menor():         #Determina el nodo con menor valor para fn
             menor=fn_actual
             nodo_aux=x
         else:
-            if fn_actual < menor:
+            if fn_actual > menor:
                 menor=fn_actual
                 nodo_aux=x
 
@@ -302,24 +308,21 @@ class Agente(object):
     #Expand node n.
         grafo.get_vecinos(aux_estado)
         print(OPEN_list)
- 
-#Step-05:
-
- 
-
- #   If any successor to n is the goal node, return success and the solution by tracing the path from goal node to S.
-  #  Otherwise, go to Step-06.
-
- 
-#Step-06:
-
- 
-
-#For each successor node,
-
+        for item in OPEN_list:
+           print(item.get_estado())
+    #Step-05:
+    #If any successor to n is the goal node, return success and the solution by tracing the path from goal node to S.   
+        for item in OPEN_list:
+           if self.es_estado_meta(item.get_estado()):
+               return True     
+    #Otherwise, go to Step-06. 
+    #Step-06:
+    #For each successor node,
 #    Apply the evaluation function f to the node.
 #    If the node has not been in either list, add it to OPEN.
-
+        menor=fn_menor()
+        aux_estado=menor.get_estado()
+        print("menor:",aux_estado)
  
 #Step-07:
 
@@ -361,6 +364,29 @@ def __codigo_ciudad(ciudad):                    #Devuelve el valor numerico de l
         return 8
     if ciudad== "Cosamaloapan":
         return 9
+
+def ciudad(cod):                    #Devuelve el valor numerico de la ciudada dado el nombre
+    if cod== 0: 
+        return "Poza Rica"
+    if cod== 1:
+        return "Veracruz"
+    if cod== 2:
+        return "Boca del rio"    
+    if cod== 3:
+        return "Xalapa"
+    if cod== 4:
+        return "Orizaba"        
+    if cod== 5:
+        return "Cotaxtla"
+    if cod== 6:
+        return "Cordoba"
+    if cod== 7:
+        return "Vega de alatorre"
+    if cod== 8:
+        return "Coatzacoalcos"
+    if cod== 9:
+        return "Cosamaloapan"
+
 
 
 def main():
