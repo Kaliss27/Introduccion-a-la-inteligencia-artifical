@@ -375,6 +375,7 @@ class Agente_viajero(object):
                     cod_cd=hdlr_list.codigo_ciudad(sucesor_d.get_destino())
                     sucesor=Nodo(sucesor_d.get_destino(),"",cod_cd)
                     print("sucesorr:",sucesor.get_estado())
+                    print("gn:",sucesor.get_gn())
                     #16:                        Contador:      =      Contador      +1
                     contador+=1
                     #17:                        IF  Contiene (Analizados, Sucesor)     ÆSKIP
@@ -384,31 +385,30 @@ class Agente_viajero(object):
                     #18:     NOT Contiene (Analizados, Sucesor) Æ
                     if self.contiene(CLOSED_list,sucesor) == False:
                         print("sucesor no en CLOSED_list")
-                        sucesor_actual=sucesor
                         #19:Sucesor-Actual: = Configurar-Nodo (Sucesor, Nodo- Actual. Costo + Costo (Nodo-Actual. Nodo, Sucesor)) 
-                        self.configurar_nodo(sucesor,(sucesor_actual.get_gn()+self.costo(sucesor_actual.get_estado(),sucesor,mapa)))
+                        self.configurar_nodo(sucesor,(nodo_actual.get_gn()+self.costo(nodo_actual.get_estado(),sucesor,mapa)))
                         #20:                                    Sucesor-Actual:      =      Asignar-Padre      (Sucesor,      Nodo-Actual.
                         self.asignar_padre(sucesor,nodo_actual)
-                        
-                        print("sucesor actuall:",sucesor_actual)
+                        nodo_actual=sucesor
+                        print("sucesor actuall:",nodo_actual.get_estado())
                         #21:                                    IF  NOT Contiene (Disponibles, Sucesor) Æ
                         if self.contiene(OPEN_list,sucesor) == False:
                             #22:                                                Disponibles:      =      Disponibles      ∪ Sucesor-Actual 
-                            OPEN_list.append(copy.deepcopy(sucesor_actual))
+                            OPEN_list.append(copy.deepcopy(nodo_actual))
                         #23:IF     Contiene (Disponibles, Sucesor) Æ    
                         if self.contiene(OPEN_list,sucesor):
                             #24:                                                IF Disponibles. G (Sucesor) > Nodo-Actual. Costo                + Costo (Nodo-Actual. Nodo, Sucesor)Æ
                             indx_b=indx_lista(OPEN_list,sucesor)
                             if OPEN_list[indx_b] > nodo_actual.get_gn():
                                  #25:                                                            Eliminar      (Disponibles,      Sucesor)
-                                 print("sucesorrr3:",sucesor)
-                                 print("sucesor_actualll:",sucesor_actual)
+                                 print("sucesorrr3:",sucesor.get_estado())
+                                 print("sucesor_actualll:",nodo_actual.get_estado())
                                  OPEN_list.remove(sucesor)
-                                 OPEN_list.append(sucesor_actual)
+                                 OPEN_list.append(nodo_actual)
 
                     if contador > len(sucesores):
                         contador=0
-                        continue    
+                        break    
 
             if len(OPEN_list)==0:           #fin primer while (do-while)
                     break;
