@@ -282,7 +282,38 @@ class Agente_viajero(object):
         print("print menor fn:",menor_fn)        
         return indx        
                    
+    def obtener_sucesores(self,ciudad_ori,g):
+        return g[ciudad_ori]
 
+    def contiene(self,lista,b):
+        boole = False
+        for x in lista:
+            if x == b:
+                boole=True    
+                break    
+        return boole
+
+    def buscar_arista(self,ciudad_dest,lista):
+        distancia=0
+        for i in range(len(lista)):
+            if lista[i].destino==ciudad_dest:
+                distancia= lista[i].get_distancia()
+                break
+        return distancia        
+                    
+    def costo(self,ciudad_ori,ciudad_dest,g):
+        list_aux=g[ciudad_ori]
+        print("lista aux1:",list_aux)
+        costo=self.buscar_arista(ciudad_dest,list_aux)
+        return costo
+
+    def indx_lista(self,lista,busq):
+        indx=0
+        for i in range(len(lista)):
+            if lista[i].get_estado==busq:
+                indx=i
+                break
+        return indx
     #A-Estrella (G, nodo-Inicial, nodo-Final) {Precondición Q1: G = (V, E) ∧ nodo-Inicial, nodo-Final ∈V)         
     def A_estrella(self,G,ciudad_inicial,ciudad_final,hdlr_list):
         #1: Disponibles: = φ
@@ -324,27 +355,67 @@ class Agente_viajero(object):
             OPEN_list.remove(nodo_actual)
             #8: Analizados: = Analizados ∪ Nodo-Actual 
             CLOSED_list.append(nodo_actual)
-            if len(OPEN_list)==0:
+            #9: IF  Nodo-Actual. Nodo = nodo-Final  Æ
+            if nodo_actual == nodo_final:
+                 #10:                  Disponibles:      =      φ
+                OPEN_list.clear()
+            #11:          Nodo-Actual.    Nodo    ≠ nodo-Final Æ
+            if nodo_actual!=nodo_final:
+                #12:Sucesores: = Obtener-Sucesores (Nodo-Actual. Nodo)          {Precondición   Q2: (∀v: v∈ Sucesores | : Adyacente(Nodo-Actual, v) )} 
+                sucesores=self.obtener_sucesores(nodo_actual.get_estado(),mapa)
+                for i in range(len(sucesores)):
+                    print("sucesores 1:",sucesores[i].get_destino())
+                #13:     Contador: = 0                       {Invariante      P2: (∀v: v ∈ Analizados | : W(nodo-Inicial, v) ≥ WSP(nodo-                      Inicial,      v))}                           {Cota      T2: Sucesores. Número – Contador +1} 
+                contador=0
+                #14:                  DO      Contador < Sucesores. Número Æ
+                condition2=True
+                while condition2:
+                    #15:                        Sucesor:      =      Sucesores      [Contador]
+                    sucesor_d = sucesores[contador]
+                    cod_cd=hdlr_list.codigo_ciudad(sucesor_d.get_destino())
+                    sucesor=Nodo(sucesor_d.get_destino(),"",cod_cd)
+                    print("sucesorr:",sucesor.get_estado())
+                    #16:                        Contador:      =      Contador      +1
+                    contador+=1
+                    #17:                        IF  Contiene (Analizados, Sucesor)     ÆSKIP
+                    if self.contiene(OPEN_list,sucesor):
+                        print("sucesor en OPEN_list")
+                        continue 
+                    #18:     NOT Contiene (Analizados, Sucesor) Æ
+                    if self.contiene(CLOSED_list,sucesor) == False:
+                        print("sucesor no en CLOSED_list")
+                        sucesor_actual=sucesor
+                        #19:Sucesor-Actual: = Configurar-Nodo (Sucesor, Nodo- Actual. Costo + Costo (Nodo-Actual. Nodo, Sucesor)) 
+                        self.configurar_nodo(sucesor,(sucesor_actual.get_gn()+self.costo(sucesor_actual.get_estado(),sucesor,mapa)))
+                        #20:                                    Sucesor-Actual:      =      Asignar-Padre      (Sucesor,      Nodo-Actual.
+                        self.asignar_padre(sucesor,nodo_actual)
+                        
+                        print("sucesor actuall:",sucesor_actual)
+                        #21:                                    IF  NOT Contiene (Disponibles, Sucesor) Æ
+                        if self.contiene(OPEN_list,sucesor) == False:
+                            #22:                                                Disponibles:      =      Disponibles      ∪ Sucesor-Actual 
+                            OPEN_list.append(copy.deepcopy(sucesor_actual))
+                        #23:IF     Contiene (Disponibles, Sucesor) Æ    
+                        if self.contiene(OPEN_list,sucesor):
+                            #24:                                                IF Disponibles. G (Sucesor) > Nodo-Actual. Costo                + Costo (Nodo-Actual. Nodo, Sucesor)Æ
+                            indx_b=indx_lista(OPEN_list,sucesor)
+                            if OPEN_list[indx_b] > nodo_actual.get_gn():
+                                 #25:                                                            Eliminar      (Disponibles,      Sucesor)
+                                 print("sucesorrr3:",sucesor)
+                                 print("sucesor_actualll:",sucesor_actual)
+                                 OPEN_list.remove(sucesor)
+                                 OPEN_list.append(sucesor_actual)
+
+                    if contador > len(sucesores):
+                        contador=0
+                        continue    
+
+            if len(OPEN_list)==0:           #fin primer while (do-while)
                     break;
-        print(CLOSED_list)            
+        print("CLOSED_list 1:",CLOSED_list[0].get_estado())            
         # end of loop     
-        #9: IF  Nodo-Actual. Nodo = nodo-Final  Æ
-        #10:                  Disponibles:      =      φ
-        #11:          Nodo-Actual.    Nodo    ≠ nodo-Final Æ
-        #12:Sucesores: = Obtener-Sucesores (Nodo-Actual. Nodo)          {Precondición   Q2: (∀v: v∈ Sucesores | : Adyacente(Nodo-Actual, v) )} 
-        #13:     Contador: = 0                       {Invariante      P2: (∀v: v ∈ Analizados | : W(nodo-Inicial, v) ≥ WSP(nodo-                      Inicial,      v))}                           {Cota      T2: Sucesores. Número – Contador +1} 
-        #14:                  DO      Contador < Sucesores. Número Æ
-        #15:                        Sucesor:      =      Sucesores      [Contador]      
-        #16:                        Contador:      =      Contador      +1      
-        #17:                        IF  Contiene (Analizados, Sucesor)     ÆSKIP
-        #18:     NOT Contiene (Analizados, Sucesor) Æ
-        #19:Sucesor-Actual: = Configurar-Nodo (Sucesor, Nodo- Actual. Costo + Costo (Nodo-Actual. Nodo, Sucesor)) 
-        #20:                                    Sucesor-Actual:      =      Asignar-Padre      (Sucesor,      Nodo-Actual.                               Nodo, Sucesor-Actual) 
-        #21:                                    IF  NOT Contiene (Disponibles, Sucesor) Æ
-        #22:                                                Disponibles:      =      Disponibles      ∪ Sucesor-Actual 
-        #23:     Contiene (Disponibles, Sucesor) Æ
-        #24:                                                IF Disponibles. G (Sucesor) > Nodo-Actual. Costo                + Costo (Nodo-Actual. Nodo, Sucesor)Æ
-        #25:                                                            Eliminar      (Disponibles,      Sucesor)      
+                
+          
         #26:                                                            Disponibles:      =      Disponibles      ∪Sucesor-Actual 
         #   FI          FI        FI                       OD                           {Poscondición            R2: (∀v: v ∈ Analizados | : W(nodo-Inicial, v) ≥      WSP(nodo-Inicial, v)) } FI OD {Poscondición R1:    Analizados: contiene el SP entre nodo-Inicial y el ultimo nodo. ∧ Disponibles: contiene nodos con G mínimo a partir del nodo-Inici        
 
