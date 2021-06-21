@@ -1,7 +1,6 @@
-from random import random               #Para generar numeros aleattorios
 import collections                      #Para hacer uso de diccionarios, listas, tuplas, etc
 import copy
-
+from collections import deque
 
 class Hdlr_and_cities(object):
     """docstring for Hdlr_and_cities"""
@@ -106,8 +105,9 @@ class Node:
     # Built in Object toString Java like function
     # Print Node
     def __repr__(self):
-
         return ('({position},{total_dist})'.format(self.position, self.total_dist))
+    def get_estado(self):
+        return self.name    
 
 
 
@@ -171,8 +171,85 @@ class Agente(object):
         super(Agente, self).__init__()
         
 
+    def BPP(self,grafo, elementoInicial, elementosRecorridos = []):
+
+        elementosRecorridos.append(elementoInicial)
+
+        vecinos = grafo.get(elementoInicial)
+
+        # Loop over neighbours
+        for key, value in vecinos.items():
+
+            vecino = Node(key, elementoInicial)
+
+        # Check if the neighbor is in the expanded list
+            if(vecino.name in elementosRecorridos):
+                continue
+
+            self.BPP(grafo, vecino, elementosRecorridos)    
+
+
+################ Greedy : Dijkstra #######################################
+#----------- Metodos auxiliares--------------------
+    def indx_lista(self,lista,busq):
+        indx=0
+        for i in range(len(lista)):
+            if lista[i]==busq:
+                indx=i
+                break
+        return indx
+    def dijkstra(self,graph,start,goal,hn):
+        #print(graph)
+        shortest_distance = {}
+        predecessor = {}
+        unseenNodes = graph.display_all_nodes()
+        infinity = 9999999
+        path = []
+        for node in unseenNodes:
+            #print(node)
+            shortest_distance[node] = infinity
+        shortest_distance[start] = 0
+        
+        #print(shortest_distance.values())
+
+        while unseenNodes:
+            minNode = None
+            for node in unseenNodes:
+                #print(node)
+                if minNode is None:
+                    minNode = node
+                    #print("for 1st if:",minNode)
+                elif shortest_distance[node] < shortest_distance[minNode]:
+                    minNode = node
+                    #print("for 1st if:",minNode)
+            dict_aux=graph.get(minNode)        
+            #print(dict_aux)        
+            for childNode, weight in dict_aux.items():
+                if weight + shortest_distance[minNode] < shortest_distance[childNode]:
+                    shortest_distance[childNode] = weight + shortest_distance[minNode]
+                    predecessor[childNode] = minNode
+            #print("min node ..:",minNode)
+            #print(hn.codigo_ciudad(minNode))
+            #print(unseenNodes)
+            idx=self.indx_lista(unseenNodes,minNode)        
+            unseenNodes.pop(idx)
+ 
+        currentNode = goal
+        while currentNode != start:
+            try:
+                path.insert(0,currentNode)
+                currentNode = predecessor[currentNode]
+            except KeyError:
+                print("Path not reachable")
+                break
+        path.insert(0,start)
+        if shortest_distance[goal] != infinity:
+            print("\n\nShortest distance is " + str(shortest_distance[goal]))
+            print("\nAnd the path is " + str(path)+ "\n\n")
+
+################@@#######----- A* ------#############################################
     def a_star_search(self,graph, heuristics, start, end):
-    
+        print(graph)
 ###########################  Shortest Path Algorithm ################################
    
         not_expanded = [] # Not Expanded
@@ -207,11 +284,11 @@ class Agente(object):
                 while current_node != start_node:
 
                 
-                    path.append("city_"+current_node.name + ': ' + str(current_node.dist_to_start_node))
+                    path.append("Ciudad"+current_node.name + ': ' + str(current_node.dist_to_start_node))
 
                     current_node = current_node.parent
 
-                path.append("city_"+start_node.name + ': ' + str(start_node.dist_to_start_node))
+                path.append("Ciudad"+start_node.name + ': ' + str(start_node.dist_to_start_node))
 
     
                 return path[::-1]
@@ -308,11 +385,16 @@ def main():
     
   
     agente_ia=Agente()
-    
+    print(graph)
+   
     path = agente_ia.a_star_search(graph, heuristics, ciudad_ori, ciudad_dest)
-    print("Displaying Shortest Path")
+    print("Ruta con A*")
     print(path)
-    print()
+    print("Ruta con dijkstra")
+    agente_ia.dijkstra(graph,ciudad_ori,ciudad_dest,hdlr_u)
+    #agente_ia.BPP(graph,ciudad_dest)
+    
+    #anchoPrimero(grafo, buenosAires, imprimir)
 
 
 if __name__ == "__main__": 
