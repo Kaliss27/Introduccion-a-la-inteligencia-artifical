@@ -173,20 +173,18 @@ class Agente(object):
 
     def BPP(self,grafo, elementoInicial, elementosRecorridos = []):
 
+        if elementoInicial in elementosRecorridos:
+
+            return
+
+        print(elementoInicial)
+
         elementosRecorridos.append(elementoInicial)
+        dict_aux=grafo.get(elementoInicial) 
+        for vecino in dict_aux.items():
 
-        vecinos = grafo.get(elementoInicial)
-
-        # Loop over neighbours
-        for key, value in vecinos.items():
-
-            vecino = Node(key, elementoInicial)
-
-        # Check if the neighbor is in the expanded list
-            if(vecino.name in elementosRecorridos):
-                continue
-
-            self.BPP(grafo, vecino, elementosRecorridos)    
+            self.BPP(grafo, vecino, elementosRecorridos)
+        
 
 
 ################ Greedy : Dijkstra #######################################
@@ -393,8 +391,9 @@ def main():
     print()
     print("Ruta con dijkstra")
     agente_ia.dijkstra(graph,ciudad_ori,ciudad_dest,hdlr_u)
-    #agente_ia.BPP(graph,ciudad_dest)
-    
+    print()
+    print("Busqueda de ciudad con BPP")
+    v=agente_ia.BPP(graph,ciudad_dest)
     #anchoPrimero(grafo, buenosAires, imprimir)
 
 
