@@ -16,6 +16,7 @@ class Hdlr_and_cities(object):
                     [132  ,129  ,153  ,157  ,260  ,176  ,247  ,0    ,438  ,275 ],   #5->Cotaxtla
                     [564  ,310  ,309  ,409  ,328  ,264  ,311  ,432  ,0    ,176 ],   #6->Cordoba
                     [399  ,146  ,144  ,244  ,164  ,98.8 ,142  ,263  ,174  ,0   ]]   #7->Vega de alatorre
+
         self.hdlr_fin=[]
 
     def get_hdlr_fin(self):
@@ -53,7 +54,7 @@ class Hdlr_and_cities(object):
         if ciudad== "Cosamaloapan":
             return 9
 
-    def ciudad(self,cod):                    #Devuelve el valor numerico de la ciudada dado el nombre
+    def ciudad(self,cod):                           #Devuelve el nombre de la ciudad dado el codigo
         if cod== 0: 
             return "Poza Rica"
         if cod== 1:
@@ -82,30 +83,30 @@ class Hdlr_and_cities(object):
 class Node:
 
     # CONSTRUCTOR
-    def __init__(self, name:str, parent:str):
+    def __init__(self, name, parent):
 
-        self.name = name
+        self.name = name                       
         self.parent = parent
-        self.dist_to_start_node = 0 # Distance to start node
-        self.dist_to_goal_node = 0 # Distance to goal node
-        self.total_dist = 0 # Total cost
+        self.dist_to_start_node = 0     # Distancia al nodo inicial (gn)
+        self.dist_to_goal_node = 0      # Distancia al nodo meta (hn)
+        self.total_dist = 0             # Fn
 
-    # Built in Object Comparision Function (__eq__)
-    # Check if two nodes are identical
+
+    # Verifica si 2 nodos son iguales
     def __eq__(self, node_to_compare):
 
         return self.name == node_to_compare.name
 
-    # Built in Object Sorting (__lt__)
-    # Sort Nodes Based on Total Cost
+    # Ordena con base al costo de cada nodo
     def __lt__(self, node_to_compare):
 
          return self.total_dist < node_to_compare.total_dist
 
-    # Built in Object toString Java like function
-    # Print Node
+    #Imprime los valores del nodo
     def __repr__(self):
         return ('({position},{total_dist})'.format(self.position, self.total_dist))
+
+    #Devuelve el estado del nodo    
     def get_estado(self):
         return self.name    
 
@@ -120,24 +121,25 @@ class Graph:
     # CONSTRUCTOR
     def __init__(self, input_dict=None):
 
-        self.input_dict = input_dict or {}
+        self.input_dict = input_dict or {}                          #Determina el grafo dado un diccionario, o dejandolo vacio 
 
-        for city_1 in list(self.input_dict.keys()):
+        for city_1 in list(self.input_dict.keys()):                 #Determina los valores del diccionario (Llaves del diccionario)
 
-            for (city_2, dist) in self.input_dict[city_1].items():
-
+            for (city_2, dist) in self.input_dict[city_1].items():  #Por cada llave recorrida asigna los valores de la conexiòn con otras ciudades
+                                                                    #y el costo de las aristas
                 self.input_dict.setdefault(city_2, {})[city_1] = dist
        
 
 
-    # Add conection / edge between nodes/verices
+    #Conecta dos ciudades asignando una arista entre dos ciudades y la distancia 
     def add_connection(self, node_a, node_b, distance=1):
 
         self.input_dict.setdefault(node_a, {})[node_b] = distance
         
         self.input_dict.setdefault(node_b, {})[node_a] = distance
 
-    # get neighbours of the current node/vertex
+   
+    #Devuelve los vecinos de un nodo especifico
     def get(self, node_a, node_b=None):
 
         connections = self.input_dict.setdefault(node_a, {})
@@ -150,7 +152,7 @@ class Graph:
 
             return connections.get(node_b)
 
-    # Get all nodes in the graph
+    #Devuelve en una lista el valor de todas las llaves de un diccionario. Lista de las ciudades 
     def display_all_nodes(self):
 
         citys = set([city for city in self.input_dict.keys()])
@@ -163,32 +165,14 @@ class Graph:
 
 
 
-##############################################  A STAR SEARCH ##################################################
+############################################## AGENTE INTELIGENTE ##################################################
 
+#CONSTRUCTOR
 class Agente(object):
-    """docstring for Agente"""
     def __init__(self):
         super(Agente, self).__init__()
         
-
-    def BPP(self,grafo, elementoInicial, elementosRecorridos = []):
-
-        if elementoInicial in elementosRecorridos:
-
-            return
-
-        print(elementoInicial)
-
-        elementosRecorridos.append(elementoInicial)
-        dict_aux=grafo.get(elementoInicial) 
-        for vecino in dict_aux.items():
-
-            self.BPP(grafo, vecino, elementosRecorridos)
-        
-
-
-################ Greedy : Dijkstra #######################################
-#----------- Metodos auxiliares--------------------
+    #Devuelve el indice de un dato en una lista dada
     def indx_lista(self,lista,busq):
         indx=0
         for i in range(len(lista)):
@@ -196,152 +180,188 @@ class Agente(object):
                 indx=i
                 break
         return indx
+
+################ Greedy : Dijkstra #######################################        
     def dijkstra(self,graph,start,goal,hn):
         #print(graph)
+        #Crea diccionarios vacios para la distancia mas corta y predecesores
         shortest_distance = {}
         predecessor = {}
+
+        #Agrega en una lista a todas las ciudades contenidas en el grafo
         unseenNodes = graph.display_all_nodes()
+        
+        #Asigna una cifra auxiliar para los caluculos del algoritmo
         infinity = 9999999
+
+        #Crea una lista para contener la ruta obtenida por el algoritmo
         path = []
+
+        #Recorre la lista de nodos no visitados
         for node in unseenNodes:
             #print(node)
+            #Asigna al diccionario la clave obtenida en nodo con el valor auxiliar como dato
             shortest_distance[node] = infinity
+
+        #Indica que para la ciudad inicial el costo sera el menor, al iniciar el algoritmo    
         shortest_distance[start] = 0
-        
         #print(shortest_distance.values())
 
+        #Ciclo  para realizar el algoritmo siempre que haya nodos en la lista de nodos no visitados
         while unseenNodes:
+
+            #Asignamos una variable para almacenar el nodo con menor costo
             minNode = None
+            #Recorre la lista de nodos no visitados
             for node in unseenNodes:
                 #print(node)
+                #Verificamos si aun no hay nodo minimo asignado, para asignar al nodo actual como minimo
                 if minNode is None:
                     minNode = node
                     #print("for 1st if:",minNode)
+                #Verificamos si la distancia del nodo actual es menor a la del nodo minimo, de ser asi, se asigna como minimo al nodo actual    
                 elif shortest_distance[node] < shortest_distance[minNode]:
                     minNode = node
                     #print("for 1st if:",minNode)
+
+            #Almacenamos en un diccionario auxiliar a los vecinos del nodo con costo minimo        
             dict_aux=graph.get(minNode)        
-            #print(dict_aux)        
+            #print(dict_aux)
+
+            #Recorremos cada vecino almacenando la ciudad que representa y la distancia con la ciudad actual        
             for childNode, weight in dict_aux.items():
+
+                #Se verifica si la distancia del nodo minimo, mas la distancia entre ciudades, es menor a la distancia de su nodo vecino
                 if weight + shortest_distance[minNode] < shortest_distance[childNode]:
+
+                    #De ser asi se asigna al nodo vecino el costo del nodo munimo
                     shortest_distance[childNode] = weight + shortest_distance[minNode]
+
+                    #Y se que el predecesor, sea igual al nodo minimo
                     predecessor[childNode] = minNode
             #print("min node ..:",minNode)
             #print(hn.codigo_ciudad(minNode))
             #print(unseenNodes)
-            idx=self.indx_lista(unseenNodes,minNode)        
+
+            #Obtenemos el codigo numerico de la ciudad con costo minimo
+            idx=self.indx_lista(unseenNodes,minNode)
+
+            #Quitamos esa ciudad de la lista de nodos no visitados        
             unseenNodes.pop(idx)
  
+        #Se indica que la ciudad actual sera igual a la ciudad meta
         currentNode = goal
+
+        #Ciclo que durara siempre que la ciudad aactual sea distinta a la inicial
         while currentNode != start:
             try:
+                #Se agrega la ciudad actual a la lista que almacena la ruta
                 path.insert(0,currentNode)
+
+                #Se hace nodo actual al nodo padre de este
                 currentNode = predecessor[currentNode]
             except KeyError:
-                print("Path not reachable")
+                print("Ruta no encontrada")
                 break
+
         path.insert(0,start)
+
+        #Se imprime la ruta y el costo de la misma
         if shortest_distance[goal] != infinity:
             print("KM recorridos: " + str(shortest_distance[goal]))
             print("Ruta: " + str(path)+ "\n\n")
 
-################@@#######----- A* ------#############################################
+##############################################  A ESTRELLA ##################################################
     def a_star_search(self,graph, heuristics, start, end):
         #print(graph)
-###########################  Shortest Path Algorithm ################################
-   
-        not_expanded = [] # Not Expanded
-        expanded = [] # expanded
+        not_expanded = []                   #Nodos por expandir
+        expanded = []                       #Nodos expandidos
 
-   
+        #Se crean los dos nodos, el de la ciudad de origen (star) y la ciudad destino (goal), no se les asigna padre
         start_node = Node(start, None)
         goal_node = Node(end, None)
 
-    # Add the start node to not_expanded list
+        # Agrega el nodo inicio a la lista de nodos por expandir
         not_expanded.append(start_node)
     
-    # Loop until all nodes in not_expanded are expanded
+        # Ciclo para realizar el algortimo mientras que la lista de nodos no expandidos contenga elementos
         while len(not_expanded) > 0:
 
-        # Sort The List
+            #Ordena los nodos en la lista de nodos no expandidos
             not_expanded.sort()
 
-        # Get the node with the lowest cost
+            # Toma de la lista de nodos no expandidos, el primer elemento, el cual debera ser el que contenga menor Fn
             current_node = not_expanded.pop(0)
 
-        # Add the current node to the expanded list
+            #Agrega el nodo actual a la lista de nodos expandidos
             expanded.append(current_node)
         
-        # Check if we have reached the goal if reached start backtrack , else continue
+            # Verifica si se ha llegado al estado meta, y si es asi regresa atras para almacenar la ruta obtenida
             if current_node == goal_node:
 
+                #Imprime el costo del camino obtenido para alcanzar la ciudad meta
                 print("KM recorridos: ",current_node.dist_to_start_node)
             # List to Store Shrtest Path
                 path = []
             
-            # Backtrack back to the start node 
+            # Ciclo para retroceder hasta el nodo inicial
                 while current_node != start_node:
 
-                
+                    #Se agrega a la ista del camino, el nodo actual
                     path.append(current_node.name)
+                    #Se asigna como nodo actual al nodo padre del actual
                     current_node = current_node.parent
 
-                    
-                
+                #Se agrega el nodo inicial a la lista del camino
                 path.append(start_node.name)
-
                 
-                
+                #Se regresa la lista del camino
                 return path[::-1]
 
-
-
-        # Get neighbours
+            #Se obtiene en una lista a los vecinos del nodo actual
             neighbors = graph.get(current_node.name)
 
-        # Loop over neighbours
+            #Recorremos la lista de vecino tomando de cada elemento, la clave y el valor de la distancia entre ciudades
             for key, value in neighbors.items():
 
+                #Creamos nuevos nodos por cada vecino de la lista, asignando como padre de estos, al nodo actual
                 neighbor = Node(key, current_node)
 
-            # Check if the neighbor is in the expanded list
+                #Verificamos si el nodo vecino se encuentra en la lista de nodos expandidos
                 if(neighbor in expanded):
                     continue
 
-############################ A_Star_Search_Algorithm #######################################
+                # Calcula el costo total de la ruta
 
-            # Calculate full path cost
                 neighbor.dist_to_start_node = current_node.dist_to_start_node + graph.get(current_node.name, neighbor.name)
 
                 neighbor.dist_to_goal_node = heuristics.get(neighbor.name)
 
                 neighbor.total_dist = neighbor.dist_to_start_node + neighbor.dist_to_goal_node
 
-            # Check if this Node Path's f(x) A* Value is > or not           
+                #Verifica recorriendo la lista de nodos no expandidos, si el costo de Fn para esta ruta es el mayor o no           
                 for node in not_expanded:
 
                     if (neighbor == node and neighbor.total_dist > node.total_dist):
 
                         continue
 
-          
+                #Agrega al vecino a la lista de nodos expandidos 
                 not_expanded.append(neighbor)
-
     
         return None
-
-
 
 ################################################# MAIN  ##############################################################
 
 
 def main():
 
-    # Create graph instance
+    #Crea una instancia de la clase que representa el Grafo
     graph = Graph()
 
-        # add edges/connections between nodes/cities
-        # City A , City B , Distance Between
+    # Conecta dos ciudades dados:
+    # Ciudad A , Ciudad B , Distancia
+
     graph.add_connection("Poza Rica","Xalapa", 219)
     graph.add_connection("Poza Rica","Vega de alatorre",132)
     graph.add_connection("Veracruz","Boca del rio",9.6)
@@ -356,20 +376,25 @@ def main():
     graph.add_connection("Coatzacoalcos","Cosamaloapan",176)
          
 
-
+    #Muestra todas las ciudades
     print("Ciudades")
     print(graph.display_all_nodes())
   
+    #Lee la ciudad de origen y la de destino
     ciudad_ori = str(input("Ingrese la ciudad de origen : "))
     ciudad_dest = str(input("Ingrese la ciudad de destino : "))
 
+    #Crea una instancia de la clase que nos proporciona la Heuristica de linea recta de las ciudades
     hdlr_u=Hdlr_and_cities()
 
+    #Genera un codigo numerico dado el nombre de la ciudad de destino
+    # y genera una lista con los valores de la heuristica para cada ciudad dada la ciudad destino
     codigo_ciudad=hdlr_u.codigo_ciudad(ciudad_dest)
     hdlr_u.heuristica_por_ciudad_destino(codigo_ciudad)
     hn=hdlr_u.get_hdlr_fin()
 
-    # Create a dictionary for heuristics : dict{'city_name' : 'distance_to_goal}
+    #Crea un diccionario para las heuristicas Hdlr 
+    # {'Nombre de la ciudad' : Hdlr}
 
     heuristics = {}
     heuristics['Poza Rica']        =hn[0]
@@ -384,18 +409,20 @@ def main():
     heuristics['Cosamaloapan']     =hn[9]
     
     print()
+
+    #Crea una instancia para el manejo del agente
     agente_ia=Agente()
+
+    #Indica al agente que se ejecuta el algoritmo A* e imprime la ruta 
     print("Ruta con A*")
     path = agente_ia.a_star_search(graph, heuristics, ciudad_ori, ciudad_dest)
     print("Ruta:",path)
     print()
+
+    #Indica al agente que se ejecuta el Dijkstra e imprime la ruta 
     print("Ruta con dijkstra")
     agente_ia.dijkstra(graph,ciudad_ori,ciudad_dest,hdlr_u)
     print()
-    print("Busqueda de ciudad con BPP")
-    v=agente_ia.BPP(graph,ciudad_dest)
-    #anchoPrimero(grafo, buenosAires, imprimir)
-
 
 if __name__ == "__main__": 
     main()
