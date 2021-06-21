@@ -26,8 +26,8 @@ class Hdlr_and_cities(object):
             #print(self.hdlr[cod_ciudad][i])
             self.hdlr_fin.append(self.hdlr[cod_ciudad][i])
 
-        for x in self.hdlr_fin:
-            print("del copy :",x)    
+        #for x in self.hdlr_fin:
+            #print("del copy :",x)    
 
 
     def codigo_ciudad(self,ciudad):                    #Devuelve el valor numerico de la ciudada dado el nombre
@@ -244,12 +244,12 @@ class Agente(object):
                 break
         path.insert(0,start)
         if shortest_distance[goal] != infinity:
-            print("\n\nShortest distance is " + str(shortest_distance[goal]))
-            print("\nAnd the path is " + str(path)+ "\n\n")
+            print("KM recorridos: " + str(shortest_distance[goal]))
+            print("Ruta: " + str(path)+ "\n\n")
 
 ################@@#######----- A* ------#############################################
     def a_star_search(self,graph, heuristics, start, end):
-        print(graph)
+        #print(graph)
 ###########################  Shortest Path Algorithm ################################
    
         not_expanded = [] # Not Expanded
@@ -277,6 +277,7 @@ class Agente(object):
         # Check if we have reached the goal if reached start backtrack , else continue
             if current_node == goal_node:
 
+                print("KM recorridos: ",current_node.dist_to_start_node)
             # List to Store Shrtest Path
                 path = []
             
@@ -284,13 +285,15 @@ class Agente(object):
                 while current_node != start_node:
 
                 
-                    path.append("Ciudad"+current_node.name + ': ' + str(current_node.dist_to_start_node))
-
+                    path.append(current_node.name)
                     current_node = current_node.parent
 
-                path.append("Ciudad"+start_node.name + ': ' + str(start_node.dist_to_start_node))
+                    
+                
+                path.append(start_node.name)
 
-    
+                
+                
                 return path[::-1]
 
 
@@ -356,12 +359,11 @@ def main():
          
 
 
-    print("Displaying All Nodes")
+    print("Ciudades")
     print(graph.display_all_nodes())
   
-    print()
-    ciudad_ori = str(input("Enter Source City : "))
-    ciudad_dest = str(input("Enter Destination City : "))
+    ciudad_ori = str(input("Ingrese la ciudad de origen : "))
+    ciudad_dest = str(input("Ingrese la ciudad de destino : "))
 
     hdlr_u=Hdlr_and_cities()
 
@@ -383,13 +385,12 @@ def main():
     heuristics['Coatzacoalcos']    =hn[8]
     heuristics['Cosamaloapan']     =hn[9]
     
-  
+    print()
     agente_ia=Agente()
-    print(graph)
-   
-    path = agente_ia.a_star_search(graph, heuristics, ciudad_ori, ciudad_dest)
     print("Ruta con A*")
-    print(path)
+    path = agente_ia.a_star_search(graph, heuristics, ciudad_ori, ciudad_dest)
+    print("Ruta:",path)
+    print()
     print("Ruta con dijkstra")
     agente_ia.dijkstra(graph,ciudad_ori,ciudad_dest,hdlr_u)
     #agente_ia.BPP(graph,ciudad_dest)
