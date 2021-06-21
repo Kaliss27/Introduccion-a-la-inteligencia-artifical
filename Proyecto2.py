@@ -24,7 +24,7 @@ class Hdlr_and_cities(object):
         
     def heuristica_por_ciudad_destino(self,cod_ciudad):        #Busca en la matriz la lista de heuristicas a usar dada una ciudad de destino
         for i in range(len(self.hdlr[cod_ciudad])):
-            print(self.hdlr[cod_ciudad][i])
+            #print(self.hdlr[cod_ciudad][i])
             self.hdlr_fin.append(self.hdlr[cod_ciudad][i])
 
         for x in self.hdlr_fin:
@@ -32,7 +32,7 @@ class Hdlr_and_cities(object):
 
 
     def codigo_ciudad(self,ciudad):                    #Devuelve el valor numerico de la ciudada dado el nombre
-        print("codigo ciudas")
+        #print("codigo ciudas")
         if ciudad== "Poza Rica": 
             return 0
         if ciudad== "Veracruz":
@@ -271,7 +271,7 @@ class Agente_viajero(object):
 
 
     def extraer_nodo_menor(self,lista):
-        print("ext nod men 1:",lista)            
+        #print("ext nod men 1:",lista)            
         menor_fn=lista[0].calcular_fn()
         indx=0
         for x in range(len(lista)):
@@ -279,6 +279,7 @@ class Agente_viajero(object):
                 print("if menor")
                 menor_fn=lista[x]
                 indx=x
+        print("menor:",lista[indx].get_estado())        
         print("print menor fn:",menor_fn)        
         return indx        
                    
@@ -323,12 +324,15 @@ class Agente_viajero(object):
 
         cod_cd1=hdlr_list.codigo_ciudad(ciudad_inicial)
         cod_cd2=hdlr_list.codigo_ciudad(ciudad_final)
-            
-        nodo_final = Nodo(ciudad_final,"",cod_cd2)
+        
+        hn=hdlr_list.get_hdlr_fin()
+
+        nodo_final = Nodo(ciudad_final,"",hn[cod_cd2])
         OPEN_list=list()
         CLOSED_list=list()
-        nodo_actual=Nodo(ciudad_inicial,"",cod_cd1)
+        nodo_actual=Nodo(ciudad_inicial,"",hn[cod_cd1])
         OPEN_list.append(nodo_actual)
+        print(OPEN_list[0].get_estado())
 
         while len(OPEN_list) != 0:
             print("hi1")
@@ -336,24 +340,39 @@ class Agente_viajero(object):
             nodo_actual=OPEN_list[indx_m]
             OPEN_list.remove(nodo_actual)
             CLOSED_list.append(nodo_actual)
-            print(OPEN_list)
-            print(CLOSED_list)
+            print("OPEN_list")
+            for i in range(len(OPEN_list)):
+                print(OPEN_list[i].get_estado())
+            print("CLOSED_list")
+            for i in range(len(CLOSED_list)):
+                print(CLOSED_list[i].get_estado())
+            print("")    
             if nodo_actual.get_estado() == nodo_final.get_estado():
                 OPEN_list.clear()
             else:
                 sucesores=self.obtener_sucesores(nodo_actual.get_estado(),mapa)
+                print("sucesores_list")
+                for i in range(len(sucesores)):
+                    print(sucesores[i].get_destino())
+                print("")  
                 num_sucesores=len(sucesores)
-                for i in range(num_sucesores-1):
+                for i in range(num_sucesores):
+                    print(" for range")
                     if self.contiene(CLOSED_list,sucesores[i].get_destino()) == False :
+                        print("if no contiene")
                         cod_c=hdlr_list.codigo_ciudad(sucesores[i].get_destino())
-                        sucesor_actual=Nodo(sucesores[i].get_destino(),nodo_actual,cod_c)
+                        print("cod ciudad sucesor:",cod_c,sucesores[i].get_destino())
+                        sucesor_actual=Nodo(sucesores[i].get_destino(),nodo_actual,hn[cod_c])
+                        print(sucesor_actual.get_estado())
                         sucesor_actual.set_gn(nodo_actual.get_gn()+self.buscar_arista(sucesores[i].get_destino(),sucesores))
                         print(sucesor_actual.get_gn())
 
                         if self.contiene(OPEN_list,sucesor_actual.get_estado())== False:
+                            print("no esta en OPEN_list")
                             OPEN_list.append(sucesor_actual)
                         else:
                             if OPEN_list[i].get_gn() > sucesor_actual.get_gn():
+                                print("OPEN_list[i}>gn:")
                                 OPEN_list[i]=sucesor_actual
                             #end if
                         #end if
@@ -414,14 +433,14 @@ if __name__ == "__main__":
     mapa ={
         "Poza Rica":[Arista("Xalapa", 219),Arista("Vega de alatorre",132)],
         "Veracruz":[Arista("Boca del rio",9.6),Arista("Xalapa",107),Arista("Cotaxtla",70.4),Arista("Vega de alatorre",130)],
-        "Boca del rio":[Arista("Cotaxtla",57.3)],
-        "Xalapa":[Arista("Cordoba",136)],
+        "Boca del rio":[Arista("Veracruz",9.6),Arista("Cotaxtla",57.3)],
+        "Xalapa":[Arista("Poza Rica", 219),Arista("Cordoba",136),Arista("Veracruz",107)],
         "Orizaba":[Arista("Cordoba",24.8)],
-        "Cotaxtla":[Arista("Cordoba",67.4),Arista("Cosamaloapan",98.8)],
-        "Cordoba":[],
-        "Vega de alatorre":[],
+        "Cotaxtla":[Arista("Cordoba",67.4),Arista("Veracruz",70.4),Arista("Boca del rio",57.3),Arista("Cosamaloapan",98.8)],
+        "Cordoba":[Arista("Orizaba",24.8),Arista("Xalapa",136),Arista("Cotaxtla",67.4)],
+        "Vega de alatorre":[Arista("Poza Rica",132),Arista("Veracruz",130)],
         "Coatzacoalcos":[Arista("Cosamaloapan",176)],
-        "Cosamaloapan":[] 
+        "Cosamaloapan":[Arista("Coatzacoalcos",176),Arista("Cotaxtla",98.8)] 
         }                         
 
     agente=Agente_viajero()
