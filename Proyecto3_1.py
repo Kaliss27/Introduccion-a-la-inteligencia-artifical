@@ -360,9 +360,9 @@ class Agente(object):
 
 
     def BPA(self,tam_list,vecinos,ciudad_dest,path,idx):
-        print("BPA")
+        #print("BPA")
         #listt=list(vecinos.keys())
-        print(vecinos)
+        #print(vecinos)
         if idx >= tam_list:
             return
         if ciudad_dest == vecinos[idx]:
@@ -370,7 +370,7 @@ class Agente(object):
             print("encontrada")
             return True
         path.append(vecinos[idx])
-        print(path)
+        #print(path)
         idx+=1
         self.BPA(tam_list,vecinos,ciudad_dest,path,idx)
 
@@ -381,17 +381,15 @@ class Agente(object):
         expanded = []
         bnd = False
         path.append(ciudad_ori)
-
         nodes=graph.display_all_nodes()
-        print(nodes)
-        print(path)
+        #print(nodes)
+        #print(path)
         #2.Hasta que el primer camino de la lista llegue al nodo objetivo o se llegue a la lista vacía hacer 
             #a. Extraer el primer camino de la lista
         neighbors_init=list(graph.get(ciudad_ori))
-
         n_li=self.elems_lista(neighbors_init)
-        print(neighbors_init)
-        print("n:",n_li)
+        #print(neighbors_init)
+        #print("n:",n_li)
         bnd=self.BPA(n_li,neighbors_init,ciudad_dest,path,0)
         print(bnd)
         idx=0    
@@ -400,10 +398,10 @@ class Agente(object):
                 break
             neighbors=list(graph.get(neighbors_init[idx]))
             n_l=self.elems_lista(neighbors)
-            print(neighbors)
-            print("n:",n_l)
+            #print(neighbors)
+            #print("n:",n_l)
             bnd=self.BPA(n_l,neighbors,ciudad_dest,path,0)
-            print(bnd)
+            #print(bnd)
             idx+=1
         return path
             #b. Expandir el nodo final de este camino a todos los vecinos del nodoterminal.
