@@ -351,6 +351,67 @@ class Agente(object):
     
         return None
 
+#Devuelve el indice de un dato en una lista dada
+    def elems_lista(self,lista):
+        n=0
+        for i in range(len(lista)):
+            n+=1    
+        return n
+
+
+    def BPA(self,tam_list,vecinos,ciudad_dest,path,idx):
+        print("BPA")
+        #listt=list(vecinos.keys())
+        print(vecinos)
+        if idx >= tam_list:
+            return
+        if ciudad_dest == vecinos[idx]:
+            path.append(vecinos[idx])
+            print("encontrada")
+            return True
+        path.append(vecinos[idx])
+        print(path)
+        idx+=1
+        self.BPA(tam_list,vecinos,ciudad_dest,path,idx)
+
+            
+    def busq_primero_prof(self,ciudad_ori,ciudad_dest,graph):
+        #1.Crear una  lista  con  un  solo  elemento  consistente  en  una trayectoria o camino de longitud cero:el nodo raíz 
+        path = []
+        expanded = []
+        bnd = False
+        path.append(ciudad_ori)
+
+        nodes=graph.display_all_nodes()
+        print(nodes)
+        print(path)
+        #2.Hasta que el primer camino de la lista llegue al nodo objetivo o se llegue a la lista vacía hacer 
+            #a. Extraer el primer camino de la lista
+        neighbors_init=list(graph.get(ciudad_ori))
+
+        n_li=self.elems_lista(neighbors_init)
+        print(neighbors_init)
+        print("n:",n_li)
+        bnd=self.BPA(n_li,neighbors_init,ciudad_dest,path,0)
+        print(bnd)
+        idx=0    
+        while bnd == None:
+            if idx>=n_li:
+                break
+            neighbors=list(graph.get(neighbors_init[idx]))
+            n_l=self.elems_lista(neighbors)
+            print(neighbors)
+            print("n:",n_l)
+            bnd=self.BPA(n_l,neighbors,ciudad_dest,path,0)
+            print(bnd)
+            idx+=1
+        return path
+            #b. Expandir el nodo final de este camino a todos los vecinos del nodoterminal.
+            #c. Eliminar los ciclos de los caminos expandidos.
+            #d. Insertar estos nuevos caminos al Final de la lista.
+        #3.FIN Hasta
+        #4.Si se halla el nodo meta notifique el éxito, si no el fracaso
+    
 ################################################# MAIN  ##############################################################
 
 
@@ -423,6 +484,11 @@ def main():
     print("Ruta con dijkstra")
     agente_ia.dijkstra(graph,ciudad_ori,ciudad_dest,hdlr_u)
     print()
+
+    #Indica al agente que se ejecuta el BPP
+    print("Ruta con BPP")
+    pathh=agente_ia.busq_primero_prof(ciudad_ori,ciudad_dest,graph)
+    print(pathh)
 
 if __name__ == "__main__": 
     main()
